@@ -1,0 +1,187 @@
+---
+title: "Result from BlackBox"
+author: "Anders Kagervall"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+params:
+  river: Åbyälven
+  year: 2019
+  species: Lax
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.kable.NA = '-')
+options(scipen=999) # Turnoff scientific notation
+library(SmoltReports)
+require(dplyr)
+require(stringr)
+require(FSA)
+require(ggplot2)
+require(gridExtra)
+require(rjags)
+#source("config.R", encoding = "UTF-8")
+
+
+rdata <- read_rdata(params$river, params$year, params$species)
+summary_data <- read_model_result(params$river, params$year, params$species)
+CU_coda <- read_CU(params$river, params$year, params$species)
+
+nsamples <- nrow(CU_coda) * 2 # Data from 2 chains
+samples <- c(CU_coda$chain1, CU_coda$chain2)
+Q <- round(quantile(samples, probs = c(2.5, 50, 97.5)/100), 0)
+
+###
+## Tidy data for plots
+P  <- summary_data %>%
+    filter(str_detect(node, 'P\\['))
+qmu  <- summary_data %>%
+    filter(str_detect(node, 'qmu\\['))
+CU  <- summary_data %>%
+    filter(str_detect(node, 'CU\\[')) %>%
+    select(-start, -sample)
+
+plot_data  <- P %>%
+    mutate(date = seq(from = as.Date(rdata$startd), by = 1,
+                      length.out = rdata$N)) %>%
+    mutate(level = rdata$wl, temp = rdata$wt) %>%
+    mutate(fish = round(mean * CU$median)) %>%
+    mutate(qmu = round(100 * qmu$median)) %>%
+    select(date, P = mean, fish, qmu, level, temp)
+p1 <- ggplot(data = plot_data, mapping = aes(x = date, y = temp)) +
+    geom_line() +
+    scale_y_continuous(name = "W. temp") +
+    scale_x_date(name = NULL, labels = NULL)#"%d/%m")
+p2 <- ggplot(data = plot_data, mapping = aes(x = date, y = level)) +
+    geom_line() +
+    scale_y_continuous(name = "W. level") +
+    scale_x_date(name = NULL, labels = NULL)#"%d/%m")
+p3 <- ggplot(data = plot_data, mapping = aes(x = date, y = qmu)) +
+    geom_col() +
+    scale_y_continuous(name = "Catchabillity") +
+    scale_x_date(name = NULL, labels = NULL)#"%d/%m")
+p4 <- ggplot(data = plot_data, mapping = aes(x = date, y = fish)) +
+    geom_col() +
+    scale_y_continuous(name = "Quant. fish") +
+    scale_x_date(name = "Date", date_labels = "%d/%m")
+combo_plot <- arrangeGrob(p1, p2, p3, p4, ncol = 1)
+#ggsave(file.path(SPECIESDIR, "per_day.pdf"), combo_plot)
+
+```
+
+## Summary of BlackBox results: `r  params$species` in `r params$river`  year `r params$year`
+
+Fishing started `r rdata$startd` and stopped `r rdata$stopd`. In total 
+`r sum(rdata$c, na.rm = TRUE)` `r params$species` were caught, `r sum(rdata$m, na.rm = TRUE)`
+were marked and
+`r sum(rdata$r, na.rm = TRUE)` were recaptured.
+The smolt production estimated with the bayesian model
+developed by Mäntyniemi and Romakkaniemi (2002) is presented below. As comparison the result
+from the Petersen estimation in *library(FSA)* and an bayesian version of the Petersen estimate
+are also presented.
+
+Report to WGBAST **Mode1 (95% PI)** = `r MODE(samples)["Mode1"]`(PI:`r CU$Q2.5`--`r CU$Q97.5`) with **CV** = `r round(CV(samples), 3)`.
+
+
+```{r samples, echo=FALSE}
+#stable <- c(min(samples), mean(samples), max(samples), Q, MODE(samples))
+stable <- c(min(samples), mean(samples), max(samples), CU$Q2.5, CU$median, CU$Q97.5, MODE(samples))
+names(stable)[1:6] <- c("Min", "Mean", "Max", "2.5%", "50%", "97.5%")
+knitr::kable(as.data.frame(stable), col.names = "CU statistic",
+             digits = 0,
+             caption = 'Table 1: Summary of CU (number of smolts). Mode1 is calculated as "median / (cv * cv +1)", Mode2 is the most common data value in the sample.')
+```
+
+### Results per day
+
+The model estimates several parameters for each day. Below is a plot with measured water temperature and water level compared with the estimated trap catchabillity and number of fish
+passing the trap each day.
+```{r per_day_plot, echo=FALSE}
+grid.arrange(p1, p2, p3, p4, ncol = 1)
+#combo_plot
+```
+
+### Diagnosis
+```{r density, echo=FALSE}
+plot(density(samples), main = "Density of CU", xlab = "CU", ylab = "Density")
+abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(samples)[1]), lty=2, lwd=.8,
+       col = c("red", "black", "red", "green"))
+```
+
+Plot of the denity of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode1.
+
+
+### History and autocorrelation
+
+```{r plotenv, echo=FALSE}
+opar<-par(no.readonly = TRUE)
+layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
+plot(chain1~iteration, data=CU_coda, type="l", col="red", xlab="Iteration", ylab="CU")
+lines(chain2~iteration, data=CU_coda, type="l", col="blue")
+with(CU_coda, {
+  acf(chain1)
+  acf(chain2)
+  })
+par(opar)
+```
+
+### Check MC error
+
+
+Check that MC.error is less than 5% of SD.
+```{r MC.error, echo=FALSE}
+check_these <- c("CU[1]","sigma[1]")
+summary_data$MC.err.percent <- round((100 * summary_data$MC.error / summary_data$sd), 2)
+MCMC.err <- summary_data %>%
+#  filter(node %in% check_these) %>%
+  filter(sd > 0) %>%
+  filter(MC.err.percent > 5) %>%
+  select(node, MC.err.percent)
+knitr::kable(as.data.frame(MCMC.err),
+             caption = "Parameters with proportion MCMC error of SD is greater than 5 %.")
+```
+
+
+
+## Petersen estimation (library(FSA))
+```{r petersen, echo=FALSE}
+
+## Prepare data list C=total catch, T=total number marked and released, R=total number recaptured
+d <- list(C=sum(rdata$c, na.rm = TRUE),
+          T=sum(rdata$m, na.rm = TRUE),
+          R=sum(rdata$r, na.rm = TRUE))
+
+est <- mrClosed(M=d$T, n=d$C, m = d$R, method = "Chapman")
+```
+
+Total number of caught fish: `r d$C`, number of marked fish: `r d$T` and number of recaptured fish: `r d$R`.
+The Petersen estimation with Chapman modification (using library(FSA)) for the data is `r summary(est)` fish (confint: `r confint(est)[1]` - `r confint(est)[2]`).
+
+## Bayesian Petersen
+
+Results from Petersen model run in a bayesian framework.
+
+```{r bayes_petersen, echo=FALSE}
+bugs_file <-
+  system.file("models",
+              "petersen.bug",
+              package = "SmoltReports",
+              mustWork = TRUE)
+petersen_model <- jags.model(
+  file = bugs_file,
+  data = d,
+  n.chains = 2,
+  n.adapt = 10000,
+  quiet = TRUE
+)
+update(petersen_model, n.iter = 501) # Burn in
+samples <- coda.samples(petersen_model,
+                        c('CU'),
+                        n.iter = 20000,
+                        thin = 5)
+plot(samples)
+summary(samples)
+```
