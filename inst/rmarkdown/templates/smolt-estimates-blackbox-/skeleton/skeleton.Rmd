@@ -3,32 +3,27 @@ title: "Result from BlackBox"
 author: "Anders Kagervall"
 date: '`r Sys.Date()`'
 output:
-  html_document: default
-  pdf_document: default
   word_document: default
-params:
-  river: Åbyälven
-  year: 2019
-  species: Lax
+  html_document: default
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 options(knitr.kable.NA = '-')
 options(scipen=999) # Turnoff scientific notation
 library(SmoltReports)
+library(lubridate)
 require(dplyr)
 require(stringr)
 require(FSA)
 require(ggplot2)
 require(gridExtra)
 require(rjags)
-#source("config.R", encoding = "UTF-8")
 
-
-rdata <- read_rdata(params$river, params$year, params$species)
-summary_data <- read_model_result(params$river, params$year, params$species)
-CU_coda <- read_CU(params$river, params$year, params$species)
+rdata <- read_rdata()
+summary_data <- read_model_result()
+CU_coda <- read_CU()
 
 nsamples <- nrow(CU_coda) * 2 # Data from 2 chains
 samples <- c(CU_coda$chain1, CU_coda$chain2)
@@ -72,10 +67,10 @@ combo_plot <- arrangeGrob(p1, p2, p3, p4, ncol = 1)
 
 ```
 
-## Summary of BlackBox results: `r  params$species` in `r params$river`  year `r params$year`
+## Summary of BlackBox results: `r  rdata$species` in `r rdata$river`  year `r year(rdata$startd)`
 
 Fishing started `r rdata$startd` and stopped `r rdata$stopd`. In total 
-`r sum(rdata$c, na.rm = TRUE)` `r params$species` were caught, `r sum(rdata$m, na.rm = TRUE)`
+`r sum(rdata$c, na.rm = TRUE)` `r rdata$species` were caught, `r sum(rdata$m, na.rm = TRUE)`
 were marked and
 `r sum(rdata$r, na.rm = TRUE)` were recaptured.
 The smolt production estimated with the bayesian model

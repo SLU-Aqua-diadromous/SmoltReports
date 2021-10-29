@@ -9,9 +9,9 @@
 #' @export
 #'
 #' @examples
-read_rdata <- function(river, year, species) {
-  fname <- system.file(file.path("smoltdata", river, year, species), "RData_dump.RData",
-                       package = "SmoltReports", mustWork = TRUE)
+read_rdata <- function(fname = "RData_dump.RData") {
+  # fname <- system.file(file.path("smoltdata", river, year, species), "RData_dump.RData",
+  #                      package = "SmoltReports", mustWork = TRUE)
   load(fname)
   return(rdata)
 }
@@ -28,9 +28,9 @@ read_rdata <- function(river, year, species) {
 #' @export
 #'
 #' @examples
-read_model_result <- function(river, year, species) {
-  fname <- system.file(file.path("smoltdata", river, year, species), "model_results.xlsx",
-                       package = "SmoltReports", mustWork = TRUE)
+read_model_result <- function(fname = "model_results.xlsx") {
+  # fname <- system.file(file.path("smoltdata", river, year, species), "model_results.xlsx",
+  #                      package = "SmoltReports", mustWork = TRUE)
   d <- readxl::read_excel(fname , sheet = "stats",
                           col_types = c("text", "numeric",  "numeric", "numeric", "numeric",
                                         "numeric", "numeric", "numeric", "numeric"))
@@ -51,9 +51,9 @@ read_model_result <- function(river, year, species) {
 #' @export
 #'
 #' @examples
-read_CU <- function(river, year, species) {
-  fname <- system.file(file.path("smoltdata", river, year, species), "model_results.xlsx",
-                       package = "SmoltReports", mustWork = TRUE)
+read_CU <- function(fname = "model_results.xlsx") {
+  # fname <- system.file(file.path("smoltdata", river, year, species), "model_results.xlsx",
+  #                      package = "SmoltReports", mustWork = TRUE)
   d <- readxl::read_excel(fname , sheet = "CU")
   d$chain1 <- as.numeric(d$chain1)
   d$chain2 <- as.numeric(d$chain2)

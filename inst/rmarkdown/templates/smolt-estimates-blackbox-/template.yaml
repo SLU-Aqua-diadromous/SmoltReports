@@ -1,4 +1,4 @@
 name: Smolt estimates (BlackBox)
 description: >
-   A description of the template
+   Summarise data from smolt BlackBox model.
 create_dir: FALSE
