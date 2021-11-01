@@ -45,6 +45,7 @@ plot_data  <- P %>%
     mutate(level = rdata$wl, temp = rdata$wt) %>%
     mutate(fish = round(mean * CU$median)) %>%
     mutate(qmu = round(100 * qmu$median)) %>%
+    mutate(C = if_else(rdata$c == 0, as.numeric(NA), rdata$c)) %>%
     select(date, P = mean, fish, qmu, level, temp)
 p1 <- ggplot(data = plot_data, mapping = aes(x = date, y = temp)) +
     geom_line() +
