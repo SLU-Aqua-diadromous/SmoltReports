@@ -4,13 +4,14 @@
 \alias{read_CU}
 \title{Read the CU (smolt estimate coda) from the smolt model results}
 \usage{
-read_CU(river, year, species)
+read_CU(fname = "model_results.xlsx")
 }
 \arguments{
-\item{species}{}
+\item{fname}{character Default "model_results.xlsx" in current directory.}
 }
 \value{
-Returns a data frame with the columns iteration, chain1 and chain2.
+Returns a data frame with the columns iteration, chain1 and chain2. Chain1 and chain2 are
+samples (posterior) of the estimated CU (total smolt run).
 }
 \description{
 Read the CU (smolt estimate coda) from the smolt model results

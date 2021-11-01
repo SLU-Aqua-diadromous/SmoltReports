@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{CV}
 \alias{CV}
-\title{Calculate  coefficient af variation}
+\title{Calculate  coefficient of variation}
 \usage{
 CV(x)
 }
@@ -13,5 +13,5 @@ CV(x)
 
 }
 \description{
-Calculate  coefficient af variation
+Calculate  coefficient of variation
 }

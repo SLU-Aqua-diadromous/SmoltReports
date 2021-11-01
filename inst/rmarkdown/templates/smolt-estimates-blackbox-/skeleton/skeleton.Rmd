@@ -92,21 +92,17 @@ knitr::kable(as.data.frame(stable), col.names = "CU statistic",
 
 ### Results per day
 
-The model estimates several parameters for each day. Below is a plot with measured water temperature and water level compared with the estimated trap catchabillity and number of fish
-passing the trap each day.
-```{r per_day_plot, echo=FALSE}
+```{r per_day_plot, echo=FALSE, fig.cap="The two top plots show measured water temperature and water level. The bottom plots show the estimated trap catchabillity and the estimated number of fish passing the trap each day."}
 grid.arrange(p1, p2, p3, p4, ncol = 1)
 #combo_plot
 ```
 
 ### Diagnosis
-```{r density, echo=FALSE}
+```{r density, echo=FALSE, fig.cap="The density of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode1."}
 plot(density(samples), main = "Density of CU", xlab = "CU", ylab = "Density")
 abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(samples)[1]), lty=2, lwd=.8,
        col = c("red", "black", "red", "green"))
 ```
-
-Plot of the denity of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode1.
 
 
 ### History and autocorrelation

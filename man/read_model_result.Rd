@@ -4,10 +4,10 @@
 \alias{read_model_result}
 \title{Read results from smolt model}
 \usage{
-read_model_result(river, year, species)
+read_model_result(fname = "model_results.xlsx")
 }
 \arguments{
-\item{species}{}
+\item{fname}{character Default "model_results.xlsx" in current directory.}
 }
 \value{
 Returns a data frame with the results from a smolt trap in river in year for species.
