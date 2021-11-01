@@ -60,6 +60,7 @@ p3 <- ggplot(data = plot_data, mapping = aes(x = date, y = qmu)) +
     scale_x_date(name = NULL, labels = NULL)#"%d/%m")
 p4 <- ggplot(data = plot_data, mapping = aes(x = date, y = fish)) +
     geom_col() +
+    geom_point(aes(y = C, color = "red"), show.legend = FALSE) +
     scale_y_continuous(name = "Quant. fish") +
     scale_x_date(name = "Date", date_labels = "%d/%m")
 combo_plot <- arrangeGrob(p1, p2, p3, p4, ncol = 1)
@@ -92,8 +93,8 @@ knitr::kable(as.data.frame(stable), col.names = "CU statistic",
 
 ### Results per day
 
-```{r per_day_plot, echo=FALSE, fig.cap="The two top plots show measured water temperature and water level. The bottom plots show the estimated trap catchabillity and the estimated number of fish passing the trap each day."}
-grid.arrange(p1, p2, p3, p4, ncol = 1)
+```{r per_day_plot, echo=FALSE, fig.cap="The two top plots show measured water temperature and water level. The bottom plots show the estimated trap catchabillity and the estimated number of fish passing the trap each day. Red points are actual caught fish."}
+suppressWarnings(grid.arrange(p1, p2, p3, p4, ncol = 1))
 #combo_plot
 ```
 
