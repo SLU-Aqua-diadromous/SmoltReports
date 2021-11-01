@@ -14,12 +14,12 @@ options(knitr.kable.NA = '-')
 options(scipen=999) # Turnoff scientific notation
 library(SmoltReports)
 library(lubridate)
-require(dplyr)
-require(stringr)
-require(FSA)
-require(ggplot2)
-require(gridExtra)
-require(rjags)
+library(dplyr)
+library(stringr)
+library(FSA)
+library(ggplot2)
+library(gridExtra)
+library(rjags)
 
 rdata <- read_rdata()
 summary_data <- read_model_result()
@@ -46,7 +46,7 @@ plot_data  <- P %>%
     mutate(fish = round(mean * CU$median)) %>%
     mutate(qmu = round(100 * qmu$median)) %>%
     mutate(C = if_else(rdata$c == 0, as.numeric(NA), rdata$c)) %>%
-    select(date, P = mean, fish, qmu, level, temp)
+    select(date, P = mean, fish, qmu, level, temp, C)
 p1 <- ggplot(data = plot_data, mapping = aes(x = date, y = temp)) +
     geom_line() +
     scale_y_continuous(name = "W. temp") +
@@ -99,45 +99,6 @@ suppressWarnings(grid.arrange(p1, p2, p3, p4, ncol = 1))
 #combo_plot
 ```
 
-### Diagnosis
-```{r density, echo=FALSE, fig.cap="The density of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode1."}
-plot(density(samples), main = "Density of CU", xlab = "CU", ylab = "Density")
-abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(samples)[1]), lty=2, lwd=.8,
-       col = c("red", "black", "red", "green"))
-```
-
-
-### History and autocorrelation
-
-```{r plotenv, echo=FALSE}
-opar<-par(no.readonly = TRUE)
-layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
-plot(chain1~iteration, data=CU_coda, type="l", col="red", xlab="Iteration", ylab="CU")
-lines(chain2~iteration, data=CU_coda, type="l", col="blue")
-with(CU_coda, {
-  acf(chain1)
-  acf(chain2)
-  })
-par(opar)
-```
-
-### Check MC error
-
-
-Check that MC.error is less than 5% of SD.
-```{r MC.error, echo=FALSE}
-check_these <- c("CU[1]","sigma[1]")
-summary_data$MC.err.percent <- round((100 * summary_data$MC.error / summary_data$sd), 2)
-MCMC.err <- summary_data %>%
-#  filter(node %in% check_these) %>%
-  filter(sd > 0) %>%
-  filter(MC.err.percent > 5) %>%
-  select(node, MC.err.percent)
-knitr::kable(as.data.frame(MCMC.err),
-             caption = "Parameters with proportion MCMC error of SD is greater than 5 %.")
-```
-
-
 
 ## Petersen estimation (library(FSA))
 ```{r petersen, echo=FALSE}
@@ -178,3 +139,42 @@ samples <- coda.samples(petersen_model,
 plot(samples)
 summary(samples)
 ```
+
+### Diagnosis
+```{r density, echo=FALSE, fig.cap="The density of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode1."}
+plot(density(samples), main = "Density of CU", xlab = "CU", ylab = "Density")
+abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(samples)[1]), lty=2, lwd=.8,
+       col = c("red", "black", "red", "green"))
+```
+
+
+### History and autocorrelation
+
+```{r plotenv, echo=FALSE}
+opar<-par(no.readonly = TRUE)
+layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE))
+plot(chain1~iteration, data=CU_coda, type="l", col="red", xlab="Iteration", ylab="CU")
+lines(chain2~iteration, data=CU_coda, type="l", col="blue")
+with(CU_coda, {
+  acf(chain1)
+  acf(chain2)
+  })
+par(opar)
+```
+
+### Check MC error
+
+
+Check that MC.error is less than 5% of SD.
+```{r MC.error, echo=FALSE}
+check_these <- c("CU[1]","sigma[1]")
+summary_data$MC.err.percent <- round((100 * summary_data$MC.error / summary_data$sd), 2)
+MCMC.err <- summary_data %>%
+#  filter(node %in% check_these) %>%
+  filter(sd > 0) %>%
+  filter(MC.err.percent > 5) %>%
+  select(node, MC.err.percent)
+knitr::kable(as.data.frame(MCMC.err),
+             caption = "Parameters with proportion MCMC error of SD is greater than 5 %.")
+```
+
