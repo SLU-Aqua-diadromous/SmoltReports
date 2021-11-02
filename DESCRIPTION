@@ -13,3 +13,11 @@ RoxygenNote: 7.1.2
 Imports:
   stats,
   readxl
+Suggests:
+  lubridate,
+  dplyr,
+  stringr,
+  FSA,
+  ggplot2,
+  gridExtra,
+  rjags
