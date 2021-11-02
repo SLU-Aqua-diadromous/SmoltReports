@@ -26,8 +26,8 @@ summary_data <- read_model_result()
 CU_coda <- read_CU()
 
 nsamples <- nrow(CU_coda) * 2 # Data from 2 chains
-samples <- c(CU_coda$chain1, CU_coda$chain2)
-Q <- round(quantile(samples, probs = c(2.5, 50, 97.5)/100), 0)
+bb_samples <- c(CU_coda$chain1, CU_coda$chain2)
+Q <- round(quantile(bb_samples, probs = c(2.5, 50, 97.5)/100), 0)
 
 ###
 ## Tidy data for plots
@@ -80,12 +80,11 @@ developed by Mäntyniemi and Romakkaniemi (2002) is presented below. As comparis
 from the Petersen estimation in *library(FSA)* and an bayesian version of the Petersen estimate
 are also presented.
 
-Report to WGBAST **Mode1 (95% PI)** = `r MODE(samples)["Mode1"]`(PI:`r CU$Q2.5`--`r CU$Q97.5`) with **CV** = `r round(CV(samples), 3)`.
+Report to WGBAST **Mode1 (95% PI)** = `r MODE(bb_samples)["Mode1"]`(PI:`r CU$Q2.5`--`r CU$Q97.5`) with **CV** = `r round(CV(bb_samples), 3)`.
 
 
-```{r samples, echo=FALSE}
-#stable <- c(min(samples), mean(samples), max(samples), Q, MODE(samples))
-stable <- c(min(samples), mean(samples), max(samples), CU$Q2.5, CU$median, CU$Q97.5, MODE(samples))
+```{r bb_samples, echo=FALSE}
+stable <- c(min(bb_samples), mean(bb_samples), max(bb_samples), CU$Q2.5, CU$median, CU$Q97.5, MODE(bb_samples))
 names(stable)[1:6] <- c("Min", "Mean", "Max", "2.5%", "50%", "97.5%")
 knitr::kable(as.data.frame(stable), col.names = "CU statistic",
              digits = 0,
@@ -99,6 +98,13 @@ suppressWarnings(grid.arrange(p1, p2, p3, p4, ncol = 1))
 #combo_plot
 ```
 
+### BlackBox smolt production (CU) posterior
+
+```{r density, echo=FALSE, fig.cap="The density of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode1."}
+plot(density(bb_samples), main = "Density of CU", xlab = "CU", ylab = "Density")
+abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(bb_samples)[1]), lty=2, lwd=.8,
+       col = c("red", "black", "red", "green"))
+```
 
 ## Petersen estimation (library(FSA))
 ```{r petersen, echo=FALSE}
@@ -132,19 +138,12 @@ petersen_model <- jags.model(
   quiet = TRUE
 )
 update(petersen_model, n.iter = 501) # Burn in
-samples <- coda.samples(petersen_model,
+petersen_samples <- coda.samples(petersen_model,
                         c('CU'),
                         n.iter = 20000,
                         thin = 5)
-plot(samples)
-summary(samples)
-```
-
-### Diagnosis
-```{r density, echo=FALSE, fig.cap="The density of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode1."}
-plot(density(samples), main = "Density of CU", xlab = "CU", ylab = "Density")
-abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(samples)[1]), lty=2, lwd=.8,
-       col = c("red", "black", "red", "green"))
+plot(petersen_samples)
+summary(petersen_samples)
 ```
 
 
