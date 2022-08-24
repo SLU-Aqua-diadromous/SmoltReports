@@ -2,16 +2,18 @@
 % Please edit documentation in R/dataloaders.R
 \name{read_model_result}
 \alias{read_model_result}
-\title{Read results from smolt model}
+\title{Read summarized results from smolt model}
 \usage{
-read_model_result(fname = "model_results.xlsx")
+read_model_result(directory = ".", resultfile = "model_results.xlsx")
 }
 \arguments{
-\item{fname}{character Default "model_results.xlsx" in current directory.}
+\item{directory}{character default current directory "."}
+
+\item{resultfile}{character Default "model_results.xlsx" in current directory.}
 }
 \value{
 Returns a data frame with the results from a smolt trap in river in year for species.
 }
 \description{
-Read results from smolt model
+Read summarized results from smolt model
 }

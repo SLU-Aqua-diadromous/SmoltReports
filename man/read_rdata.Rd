@@ -4,10 +4,12 @@
 \alias{read_rdata}
 \title{Read data used for Smolt mark recaputure model}
 \usage{
-read_rdata(fname = "RData_dump.RData")
+read_rdata(directory = ".", rdatafile = "RData_dump.RData")
 }
 \arguments{
-\item{fname}{character Default "RData_dump.RData" in current directory.}
+\item{directory}{character default current directory "."}
+
+\item{rdatafile}{character Default "RData_dump.RData" in current directory.}
 }
 \value{
 Returns a data structure with the data from a smolt trap in river in year for species.
