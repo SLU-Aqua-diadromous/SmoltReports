@@ -1,0 +1,92 @@
+---
+title: "Rapport smoltfälla"
+author: "Anders Kagervall"
+date: "20 februari 2019"
+output:
+  word_document: default
+  html_document: default
+---
+
+
+```{r initialize, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("config.R", encoding = "UTF-8")
+source("functions.R", encoding = "UTF-8")
+library(dplyr, quietly = TRUE)
+library(readxl, quietly = TRUE)
+library(sp, quietly = TRUE)
+library(ggmap, quietly = TRUE)
+
+#fishfile <- "smoltreg_Högvadsån_2019-MM-DD.xlsx"
+fishfile <- "Mörrumsån_Ekeberg_2018.xlsx"
+metadata <- read_meta(fishfile)
+fishdata <- read_fish(fishfile, dummy_tags = metadata$dummy_tags)
+
+trap_coords <- as.numeric(c(metadata$E_coord, metadata$N_coord))
+trap_point <- spTransform(
+  SpatialPoints(matrix(
+    trap_coords, ncol = 2),
+    proj4string = CRS("+init=epsg:3006")),
+  CRS("+init=epsg:4326"))
+
+trap_df <- as.data.frame(coordinates(trap_point))
+#trap_df$Name <- metadata$loc_name 
+
+trap_map <- ggmap(get_googlemap(center = coordinates(trap_point),
+                          zoom = 18, markers = trap_df, maptype = "hybrid"))
+area_map <- ggmap(get_googlemap(center = coordinates(trap_point),
+                          zoom = 14, markers = trap_df, maptype = "roadmap"))
+ 
+#envdata <- read_environ(envfile)
+```
+
+## Smoltfälla `r metadata$river` `r format(metadata$startdate, "%Y")`
+
+Summering av smoltfångstsäsongen i `r metadata$river` år `r format(metadata$startdate, "%Y")`.
+Detta är en automatgenererad rapport skapad från data i filen *`r basename(fishfile)`*.
+
+Smoltfångst startade `r metadata$startdate` avslutades `r metadata$enddate`. Ansvarig vid fällan `r metadata$contact` (`r metadata$email`).
+
+
+## Kartor
+
+Kartor över `r metadata$loc_name` i `r metadata$river`.
+
+Översikt
+```{r area_map, echo=FALSE}
+print(area_map)
+```
+
+Fällplatsen
+```{r trap_map, echo=FALSE}
+print(trap_map)
+```
+
+## Fångstdata
+
+### Översikt arter
+
+Filen *`r basename(fishfile)`* innehåller `r nrow(fishdata)` rader som representerar fångst av fisk. 
+
+Antal fiskar per art:
+```{r speciestable}
+sort(table(fishdata[fishdata$event %in% c(1, 2),]$species), decreasing =  TRUE)
+```
+
+### Fångst/återfångst lax och öring
+
+```{r markings, echo=FALSE}
+marked_tab <- fishdata %>%
+  filter(species %in% c("lax", "öring")) %>%
+  group_by(species, event) %>%
+  summarize(N=n()) %>%
+  mutate(event = case_when(
+    event == 0 ~ "Okänt",
+    event == 1 ~ "Ej märkt",
+    event == 2 ~ "Märkt",
+    event == 3 ~ "Återfångst",
+    event == 4 ~ "Ej åter (död)"
+  ))
+
+knitr::kable(marked_tab)
+```
