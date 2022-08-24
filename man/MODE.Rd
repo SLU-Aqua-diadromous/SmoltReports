@@ -10,7 +10,7 @@ MODE(x)
 \item{x}{numerical vector}
 }
 \value{
-
+numeric
 }
 \description{
 Calculate the mode

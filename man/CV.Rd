@@ -10,7 +10,7 @@ CV(x)
 \item{x}{nunerical vector}
 }
 \value{
-
+numeric
 }
 \description{
 Calculate  coefficient of variation

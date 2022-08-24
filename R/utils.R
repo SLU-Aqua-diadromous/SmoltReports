@@ -3,6 +3,7 @@
 #' @param x nunerical vector
 #'
 #' @return
+#' numeric
 #' @export
 #'
 CV <- function(x){
@@ -15,6 +16,7 @@ CV <- function(x){
 #' @param x numerical vector
 #'
 #' @return
+#' numeric
 #' @export
 #'
 MODE <- function(x) {
