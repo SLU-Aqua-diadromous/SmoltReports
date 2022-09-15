@@ -1,5 +1,8 @@
 #' Read data used for Smolt mark recaputure model
 #'
+#' Read the rdata file saveed by söte2bugs. If vectors c, m or r contains -9
+#' they are repolaced with NA.
+#'
 #' @param directory character default current directory "."
 #' @param rdatafile character Default "RData_dump.RData" in current directory.
 #'
@@ -13,6 +16,9 @@ read_rdata <- function(directory = ".",  rdatafile = "RData_dump.RData") {
   load(fname, envir = myenv)
   if (!exists("rdata", myenv)) stop(paste0(fname, ' must contain list "rdata".'))
   res <- get("rdata", envir = myenv)
+  res$c[res$c == -9] <- NA
+  res$m[res$m == -9] <- NA
+  res$r[res$r == -9] <- NA
   return(res)
 }
 
