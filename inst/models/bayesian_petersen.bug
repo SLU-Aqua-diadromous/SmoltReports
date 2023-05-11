@@ -1,0 +1,54 @@
+## Bayesian version of the Petersen estimation
+## Written by Samu Mäntyniemi and Atso Romakkaniemi, see:
+## Mäntyniemi, S., & Romakkaniemi, A. (2002). Bayesian mark recapture estimation with an application to
+## a salmonid smolt population. Canadian Journal of Fisheries and Aquatic Sciences, 59(11), 1748–1758.
+
+## Input data: C=total catch, T=total number marked and released, R=total number recaptured
+##list(C=830,T=813,R=69)
+
+data {
+  o <- 0
+}
+model {
+
+## Prior distribution for the population size ##
+## Prior density proportional to 1/U is obtained as follows ##
+
+  U <- round(CU)
+  CU <- (exp(logU))
+  logU ~ dunif(loglimit,15.4)
+  loglimit <- log(C)
+
+## Based on the updating rule of the beta distribution, the posterior distribution of
+## q after the mark-recapture experiment is a beta distribution with parameters
+## a+R and b+T-R, where a and b are the parameters of the beta prior distribution of q.
+## In this case a=b=1. Given this knowledge about q, C will follow
+## a beta-binomial distribution:
+
+  A <- 1+R
+  B <- 1+T-R
+
+  o ~ dpois(l)
+#  o <- 0 ## Moved to data block as needed by JAGS
+  l <- -(L1+L2+L3)
+  L1 <- loggam(U+1)-loggam(C+1)-loggam(U-C+1)
+  L2 <- loggam(A+C)+loggam(U+B-C)-loggam(A+B+U)
+  L3 <- loggam(A+B)-loggam(A)-loggam(B)
+}
+
+
+## Original BlackBox script to run model
+##
+# display(log)
+# check('\smolts\Bayesian_Petersen_ModelSP')
+# data('\smolts\data_Bayesian_PetersenSP')
+# compile(1)
+# gen.inits()
+# set(CU)
+# refresh(1)
+# display(window)
+# update(501)
+# trace(CU)
+# thin.updater(20)
+# update(10000)
+# gr(CU)
