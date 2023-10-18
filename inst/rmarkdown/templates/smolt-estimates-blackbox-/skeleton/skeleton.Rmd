@@ -127,7 +127,7 @@ Results from Petersen model run in a bayesian framework.
 ```{r bayes_petersen, echo=FALSE}
 bugs_file <-
   system.file("models",
-              "petersen.bug",
+              "bayesian_petersen.bug",
               package = "SmoltReports",
               mustWork = TRUE)
 petersen_model <- jags.model(
