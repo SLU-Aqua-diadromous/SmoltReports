@@ -18,28 +18,14 @@ require(readxl)
 require(FSA)
 require(ggplot2)
 require(gridExtra)
+require(SmoltReports)
 require(rjags)
 
+load("RData_dump.RData")
 
-river <- "Testeboån"
-year <- 2021
-species <- "Lax"
-#species <- "Öring"
-source("config.R", encoding = "UTF-8")
+year <- as.POSIXlt(rdata$startd)$year +1900
 
-load(file.path(SPECIESDIR, "RData_dump.RData"))
 
-CV <- function(x){
-  (sd(x)/mean(x))
-}
-MODE <- function(x) {
-  cv <- CV(x)
-  m1 <- round(median(x) / (cv * cv + 1), digits = 0)
-  m2 <- as.numeric(names(which.max(table(x))))
-  res <- c(m1, m2)
-  names(res) <- c("Mode1", "Mode2")
-  return(res)
-}
 ```
 
 ## Simple results: `r  rdata$species` in `r rdata$river`  year `r year`
@@ -49,11 +35,6 @@ Results for `r rdata$species` from `r rdata$river` year `r year`. Fishing starte
 were marked and
 `r sum(rdata$r, na.rm = TRUE)` were recaptured.
 The smolt production estimated Petersen estimation in *library(FSA)* and an bayesian version of the Petersen estimate are also presented.
-
-
-
-
-
 
 
 ## Petersen estimation (library(FSA))
@@ -75,7 +56,7 @@ Results from Petersen model run in a bayesian framework.
 
 ```{r bayes_petersen, echo=FALSE}
 
-petersen_model <- jags.model(file="petersen.bug",
+petersen_model <- jags.model(file=system.file("models", "bayesian_petersen.bug", package="SmoltReports"),
                              data=d,
                              n.chains = 2,
                              n.adapt = 10000,
