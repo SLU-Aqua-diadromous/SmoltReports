@@ -1,4 +1,4 @@
-name: Create yearly report for a smolt trap
+name: Yearly smolt trap report
 description: >
-   Summarise data from smolt BlackBox model.
+   Summarise smolt trap catches.
 create_dir: FALSE
