@@ -1,7 +1,7 @@
 Package: SmoltReports
 Type: Package
 Title: Report Templates And Utilities For Smolt Traps
-Version: 0.1.1
+Version: 0.1.2
 Author: Anders Kagervall
 Maintainer: Anders Kagervall <anders.kagervall@slu.se>
 Description: More about what it does (maybe more than one line)
@@ -9,7 +9,7 @@ Description: More about what it does (maybe more than one line)
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports:
   stats,
   utils,

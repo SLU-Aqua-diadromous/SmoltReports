@@ -10,8 +10,13 @@ MODE(x)
 \item{x}{numerical vector}
 }
 \value{
-numeric
+a named numerical vector with mode estimates.
 }
 \description{
-Calculate the mode
+Calculate the mode of a numerical vector. The function will return a named
+numerical vector with the mode of x calculated in four different ways.
+Mode1 is stats::median(x) / (cv * cv + 1) as recommended by Atso but this
+method seems to give to low values if the cv is high. Mode4 is calculated with
+the density() function and is probably the one we should use on the posterior
+smolt estimate.
 }
