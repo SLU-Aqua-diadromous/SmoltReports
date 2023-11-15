@@ -1,7 +1,7 @@
 #' Read data used for Smolt mark recaputure model
 #'
-#' Read the rdata file saveed by söte2bugs. If vectors c, m or r contains -9
-#' they are repolaced with NA.
+#' Read the rdata file saved by söte2bugs. If vectors c, m or r contains -9
+#' they are replaced with NA.
 #'
 #' @param directory character default current directory "."
 #' @param rdatafile character Default "RData_dump.RData" in current directory.

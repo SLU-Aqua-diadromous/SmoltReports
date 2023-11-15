@@ -15,5 +15,6 @@ read_rdata(directory = ".", rdatafile = "RData_dump.RData")
 Returns a data structure with the data from a smolt trap in river in year for species.
 }
 \description{
-Read data used for Smolt mark recaputure model
+Read the rdata file saved by söte2bugs. If vectors c, m or r contains -9
+they are replaced with NA.
 }
