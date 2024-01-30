@@ -80,15 +80,15 @@ developed by Mäntyniemi and Romakkaniemi (2002) is presented below. As comparis
 from the Petersen estimation in *library(FSA)* and an bayesian version of the Petersen estimate
 are also presented.
 
-Report to WGBAST **Mode1 (95% PI)** = `r MODE(bb_samples)["Mode1"]`(PI:`r CU$Q2.5`--`r CU$Q97.5`) with **CV** = `r round(CV(bb_samples), 3)`.
+Report to WGBAST **Mode3 (95% PI)** = `r round(MODE(bb_samples)["Mode3"], 0)` (PI:`r CU$Q2.5`--`r CU$Q97.5`) with **CV** = `r round(CV(bb_samples), 3)`.
 
 
 ```{r bb_samples, echo=FALSE}
-stable <- c(min(bb_samples), mean(bb_samples), max(bb_samples), CU$Q2.5, CU$median, CU$Q97.5, MODE(bb_samples))
-names(stable)[1:6] <- c("Min", "Mean", "Max", "2.5%", "50%", "97.5%")
-knitr::kable(as.data.frame(stable), col.names = "CU statistic",
+res_table <- c(min(bb_samples), mean(bb_samples), max(bb_samples), CU$sd, CU$Q2.5, CU$median, CU$Q97.5, MODE(bb_samples))
+names(res_table)[1:6] <- c("Min", "Mean", "Max", "sd", "2.5%", "50%", "97.5%")
+knitr::kable(as.data.frame(res_table), col.names = "CU statistic",
              digits = 0,
-             caption = 'Table 1: Summary of CU (number of smolts). Mode1 is calculated as "median / (cv * cv +1)", Mode2 is the most common data value in the sample.')
+             caption = 'Table 1: Summary of CU (number of smolts). Mode1 is calculated as "median / (cv * cv +1)", Mode2 is the most common data value in the sample and Mode3 is the max value of the density function.')
 ```
 
 ### Results per day
@@ -100,9 +100,9 @@ suppressWarnings(grid.arrange(p1, p2, p3, p4, ncol = 1))
 
 ### BlackBox smolt production (CU) posterior
 
-```{r density, echo=FALSE, fig.cap="The density of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode1."}
+```{r density, echo=FALSE, fig.cap="The density of the posterior distribution of CU. The red vertical lines show 2.5% and 97.5% quartiles, the black vertical line is the 50% quartile (median) and the green line Mode3"}
 plot(density(bb_samples), main = "Density of CU", xlab = "CU", ylab = "Density")
-abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(bb_samples)[1]), lty=2, lwd=.8,
+abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(bb_samples)["Mode3"]), lty=2, lwd=.8,
        col = c("red", "black", "red", "green"))
 ```
 
