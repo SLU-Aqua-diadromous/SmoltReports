@@ -40,3 +40,28 @@ MODE <- function(x) {
   return(res)
 }
 
+#' Selects strings that match one on several prefixes
+#'
+#' Match strings for the prefixes using base::startsWith(). Return a logical
+#' vector that indicate all matches.
+#'
+#' @param strings character vector to match
+#' @param prefixes character vector with prefixes
+#'
+#' @return
+#' A logical vector with the same length as `strings`
+#' @export
+#'
+#' @examples
+#' x1 <- c("Foobar", "bla bla", "something", "another", "blu", "brown", "blau blüht der Enzian")
+#' p <- c("Foo", "bl")
+#' startsWith_multiple(x1, p)
+#'
+startsWith_multiple <- function(strings, prefixes) {
+  ll <- lapply(prefixes, function(x) {
+    startsWith(strings, x)} # returns a list matches for each prefix
+  )
+  res <- Reduce(f = "|", ll)
+  return(res)
+}
+
