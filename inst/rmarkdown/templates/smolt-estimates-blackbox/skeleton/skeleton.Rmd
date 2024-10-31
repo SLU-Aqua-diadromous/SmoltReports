@@ -105,6 +105,32 @@ plot(density(bb_samples), main = "Density of CU", xlab = "CU", ylab = "Density")
 abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(bb_samples)["Mode3"]), lty=2, lwd=.8,
        col = c("red", "black", "red", "green"))
 ```
+### Model diagnostics
+
+```{r gelman, echo=FALSE}
+Year <- lubridate::year(rdata$startd)
+rds_name <- sprintf("coda_%s_%s_%d.rds",
+                    rdata$river,
+                    rdata$species,
+                    Year)
+ variable_prefixes <- c("CU[", "P[", "qmu[", "sigma[",
+                       "nu1[", "nu2[", "omega1[", "omega2[")
+ psrf_lim <- 1.10
+if (file.exists(rds_name)) {
+  full_coda <- readRDS(rds_name)
+  all_names <- coda::varnames(full_coda)
+ 
+  selected_coda <- select_from_mcmc(full_coda, variable_prefixes)
+  gelman_result <- gelman_good_proportion(selected_coda, psrf_limit = psrf_lim)
+} else {
+  gelman_result <- c(NA, NA)
+  names(gelman_result) <- c("Proportion", "N_variables")
+}
+```
+
+Gelman and Rubin's convergence diagnostic was tested on **`r gelman_result["N_variables"]`**
+with a name prefix: `r variable_prefixes`. The proportion of variables with a convergence
+diagnostic <= `r psrf_lim` was **`r round(100 * gelman_result["Proportion"])`%**.
 
 ## Petersen estimation (library(FSA))
 ```{r petersen, echo=FALSE}
