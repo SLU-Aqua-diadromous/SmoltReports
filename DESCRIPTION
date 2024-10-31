@@ -1,7 +1,7 @@
 Package: SmoltReports
 Type: Package
 Title: Report Templates And Utilities For Smolt Traps
-Version: 0.1.2
+Version: 0.1.3
 Author: Anders Kagervall
 Maintainer: Anders Kagervall <anders.kagervall@slu.se>
 Description: More about what it does (maybe more than one line)
