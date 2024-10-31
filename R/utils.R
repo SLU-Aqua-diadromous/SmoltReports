@@ -91,3 +91,30 @@ select_from_mcmc <- function(x, prefixes) {
   return(new_mcmc)
 }
 
+#' Calculate the proportion of variables in an mcmc object that have "good" gelman.diag
+#'
+#' Calculate the proportion of variables in an mcmc object that have an
+#' [coda::gelman.diag()] value below or equal psrf_limit (defalt = 1.10)
+#'
+#' @param x an mcmc object
+#' @param psrf_limit numeric the limit to classify the diag as good
+#'
+#' @return
+#' A numeric vector of length two. The first number is the proportion of
+#' gelman.diag() <= `psrf_limit` the second number is the number of variables
+#' in `x`.
+#' @export
+#'
+#' @examples
+#' data(line) # data from package coda
+#' gelman_good_proportion(line)
+#'
+gelman_good_proportion <- function(x, psrf_limit = 1.10) {
+  res <- coda::gelman.diag(x)$psrf[,1]
+  N <- length(res)
+  good_gelman <- res <= psrf_limit
+  good_proportion <- sum(good_gelman) / length(good_gelman)
+  res <- c(good_proportion, N)
+  names(res) <- c("Proportion", "N_variables")
+  return(res)
+}

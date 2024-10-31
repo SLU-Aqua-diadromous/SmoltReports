@@ -2,6 +2,7 @@
 
 export(CV)
 export(MODE)
+export(gelman_good_proportion)
 export(read_CU)
 export(read_blackbox_coda)
 export(read_model_result)
