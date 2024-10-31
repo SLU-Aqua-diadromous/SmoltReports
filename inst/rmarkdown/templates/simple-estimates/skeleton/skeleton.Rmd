@@ -1,5 +1,5 @@
 ---
-title: "Result from BlackBox"
+title: "Mark-Recapture estimates (no Blackbox)"
 author: "Anders Kagervall"
 date: '`r Sys.Date()`'
 output:
@@ -21,7 +21,7 @@ require(gridExtra)
 require(SmoltReports)
 require(rjags)
 
-load("RData_dump.RData")
+load("RData_dump.RData") # read data structure rdata
 
 year <- as.POSIXlt(rdata$startd)$year +1900
 

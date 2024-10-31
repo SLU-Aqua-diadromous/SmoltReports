@@ -1,4 +1,4 @@
 name: Simple smolt estimates (no Blackbox data)
 description: >
-   Summarise data from smolt BlackBox model.
+   Summarise data from smolt mark/recapture.
 create_dir: FALSE
