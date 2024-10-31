@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataloaders.R
 \name{read_blackbox_coda}
 \alias{read_blackbox_coda}
-\title{Read coda saved in BlackBox txt format and return a mcmc.list {coda}}
+\title{Read coda saved in BlackBox txt format and return a mcmc.list}
 \usage{
 read_blackbox_coda(
   directory = ".",

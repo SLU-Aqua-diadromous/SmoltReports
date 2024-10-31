@@ -62,7 +62,7 @@ read_CU <- function(directory = ".", resultfile = "model_results.xlsx") {
   return(d)
 }
 
-#' Read coda saved in BlackBox txt format and return a mcmc.list {coda}
+#' Read coda saved in BlackBox txt format and return a mcmc.list
 #'
 #'
 #' The function will read three files saved as text from BlackBox with Inference/Samples.
