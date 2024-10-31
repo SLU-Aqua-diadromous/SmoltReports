@@ -33,7 +33,7 @@ MODE <- function(x) {
   m1 <- stats::median(x) / (cv * cv + 1)
   uniqv <- unique(x)
   m2 <- uniqv[which.max(tabulate(match(x, uniqv)))]
-  d <- density(x)
+  d <- stats::density(x)
   m3 <- d$x[which.max(d$y)]
   res <- c(m1, m2, m3)
   names(res) <- c("Mode1", "Mode2", "Mode3")
