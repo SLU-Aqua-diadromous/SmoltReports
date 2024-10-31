@@ -129,7 +129,7 @@ if (file.exists(rds_name)) {
 ```
 
 Gelman and Rubin's convergence diagnostic was tested on **`r gelman_result["N_variables"]`**
-with a name prefix: `r variable_prefixes`. The proportion of variables with a convergence
+variables with a name prefix: `r variable_prefixes`. The proportion of variables with a convergence
 diagnostic <= `r psrf_lim` was **`r round(100 * gelman_result["Proportion"])`%**.
 
 ## Petersen estimation (library(FSA))
