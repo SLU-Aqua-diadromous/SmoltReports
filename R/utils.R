@@ -65,3 +65,29 @@ startsWith_multiple <- function(strings, prefixes) {
   return(res)
 }
 
+#' Select a subset of variables from a coda object
+#'
+#' Select a subset of variables from an [coda::mcmc()] or [coda::mcmc.list()]
+#' object. Variables with names starting with one of the strings in `prefixes`
+#' are selected.
+#'
+#' @param x a `mcmc` object
+#' @param prefixes character vector
+#'
+#' @return
+#' A `mcmc` object with only the variables
+#' @export
+#'
+#' @examples
+#' data(line) # data from package coda
+#' coda::varnames(line)
+#' new_line <- select_from_mcmc(line, c("al", "si"))
+#' coda::varnames(new_line)
+#'
+select_from_mcmc <- function(x, prefixes) {
+  all_names <- coda::varnames(x)
+  var_index <- startsWith_multiple(all_names, prefixes)
+  new_mcmc <- x[, var_index, drop = FALSE]
+  return(new_mcmc)
+}
+
