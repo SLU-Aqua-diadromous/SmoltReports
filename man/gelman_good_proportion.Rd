@@ -21,6 +21,7 @@ Calculate the proportion of variables in an mcmc object that have an
 [coda::gelman.diag()] value below or equal psrf_limit (defalt = 1.10)
 }
 \examples{
+require(coda)
 data(line) # data from package coda
 gelman_good_proportion(line)
 

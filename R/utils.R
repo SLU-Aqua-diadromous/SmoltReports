@@ -79,6 +79,7 @@ startsWith_multiple <- function(strings, prefixes) {
 #' @export
 #'
 #' @examples
+#' require(coda)
 #' data(line) # data from package coda
 #' coda::varnames(line)
 #' new_line <- select_from_mcmc(line, c("al", "si"))
@@ -106,6 +107,7 @@ select_from_mcmc <- function(x, prefixes) {
 #' @export
 #'
 #' @examples
+#' require(coda)
 #' data(line) # data from package coda
 #' gelman_good_proportion(line)
 #'

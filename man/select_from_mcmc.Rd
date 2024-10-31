@@ -20,6 +20,7 @@ object. Variables with names starting with one of the strings in `prefixes`
 are selected.
 }
 \examples{
+require(coda)
 data(line) # data from package coda
 coda::varnames(line)
 new_line <- select_from_mcmc(line, c("al", "si"))
