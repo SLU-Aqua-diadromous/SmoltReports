@@ -1,17 +1,17 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
-<url><loc>/404.html</loc></url>
-<url><loc>/LICENSE.html</loc></url>
-<url><loc>/authors.html</loc></url>
-<url><loc>/index.html</loc></url>
-<url><loc>/reference/CV.html</loc></url>
-<url><loc>/reference/MODE.html</loc></url>
-<url><loc>/reference/gelman_good_proportion.html</loc></url>
-<url><loc>/reference/index.html</loc></url>
-<url><loc>/reference/read_CU.html</loc></url>
-<url><loc>/reference/read_blackbox_coda.html</loc></url>
-<url><loc>/reference/read_model_result.html</loc></url>
-<url><loc>/reference/read_rdata.html</loc></url>
-<url><loc>/reference/select_from_mcmc.html</loc></url>
-<url><loc>/reference/startsWith_multiple.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/404.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/LICENSE.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/authors.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/index.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/CV.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/MODE.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/gelman_good_proportion.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/index.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/read_CU.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/read_blackbox_coda.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/read_model_result.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/read_rdata.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/select_from_mcmc.html</loc></url>
+<url><loc>https://slu-aqua-diadromous.github.io/SmoltReports/reference/startsWith_multiple.html</loc></url>
 </urlset>
 
