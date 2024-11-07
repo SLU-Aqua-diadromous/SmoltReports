@@ -85,7 +85,7 @@ Report to WGBAST **Mode3 (95% PI)** = `r round(MODE(bb_samples)["Mode3"], 0)` (P
 
 ```{r bb_samples, echo=FALSE}
 res_table <- c(min(bb_samples), mean(bb_samples), max(bb_samples), CU$sd, CU$Q2.5, CU$median, CU$Q97.5, MODE(bb_samples))
-names(res_table)[1:6] <- c("Min", "Mean", "Max", "sd", "2.5%", "50%", "97.5%")
+names(res_table)[1:7] <- c("Min", "Mean", "Max", "sd", "2.5%", "50%", "97.5%")
 knitr::kable(as.data.frame(res_table), col.names = "CU statistic",
              digits = 0,
              caption = 'Table 1: Summary of CU (number of smolts). Mode1 is calculated as "median / (cv * cv +1)", Mode2 is the most common data value in the sample and Mode3 is the max value of the density function.')
