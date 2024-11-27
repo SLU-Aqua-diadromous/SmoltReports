@@ -106,7 +106,7 @@ abline(v = c(Q["2.5%"], Q["50%"], Q["97.5%"], MODE(bb_samples)["Mode3"]), lty=2,
        col = c("red", "black", "red", "green"))
 ```
 
-### Model diagnostics
+### BlackBox Model diagnostics
 
 ```{r gelman, echo=FALSE}
 Year <- lubridate::year(rdata$startd)
@@ -173,6 +173,25 @@ plot(petersen_samples)
 summary(petersen_samples)
 ```
 
+
+## Compare models
+```{r compare, echo=FALSE, fig.cap="Point estimates for the models with 95% confidence/probabillity intervals."}
+BB_CU <- full_coda[,"CU[1]"]
+BB_res <- summary(BB_CU, quantiles = c(0.025, .5, .975))$quantiles
+petersen_res <- summary(petersen_samples, quantiles = c(0.025, .5, .975))$quantiles
+fsa_res <- c(confint(est)[1], summary(est), confint(est)[2])
+
+compare_df <- as.data.frame(rbind(BB_res, petersen_res, fsa_res))
+compare_df$model <- c("BlackBox", "Petersen(Bayes)", "Petersen(FSA)")
+names(compare_df) <- c("Lower", "Estimate", "Upper", "Model")
+
+compare_fig <- ggplot(data = compare_df, mapping = aes(x = Estimate, y = Model)) +
+  geom_point(size = 4) +
+  geom_pointrange(aes(xmin = Lower, xmax = Upper)) +
+  theme_bw()
+compare_fig
+
+```
 
 ### History and autocorrelation
 
